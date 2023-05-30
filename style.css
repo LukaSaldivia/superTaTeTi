@@ -1,0 +1,227 @@
+*,*::after,*::before{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+:root{
+    --background: #002;
+    --tiny-board: #014;
+    --big-board: #08f;
+    --disabled: #001;
+
+    --active: #039;
+
+    --tiny-cell-size: 55px;
+
+    --o-color: #D22;
+    --x-color: #DD2;
+    --d-color: #F5F;
+}
+
+body{
+    min-height: 100vh;
+    background-color: var(--background);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    gap: 3rem;
+}
+
+#mega-board,.mega-cell{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    grid-template-rows: repeat(3,1fr);
+    gap: 5px;
+}
+
+#mega-board{
+    background-color: var(--big-board);
+    gap: 12px;
+}
+
+.mega-cell{
+    background-color: var(--tiny-board);
+}
+
+.mega-cell.active{
+    animation: colorChange .3s infinite alternate ease-in-out;
+}
+
+@keyframes colorChange {
+    to{
+        background-color: var(--active);
+    }
+}
+
+.mega-cell:is(.o,.x,.d){
+    background-color: var(--disabled);
+}
+
+.mega-cell:is(.o,.x,.d) .tiny-cell::after,
+.mega-cell:is(.o,.x,.d) .tiny-cell::before
+{
+    background-color: var(--disabled);
+    border-color: var(--disabled);
+}
+
+
+.tiny-cell{
+    aspect-ratio: 1/1;
+    width: var(--tiny-cell-size);
+    background-color: var(--background);
+}
+
+.mega-cell,.tiny-cell{
+    position: relative;
+}
+
+
+
+#mega-board:is(.o,.x) .tiny-cell:hover::after,
+#mega-board:is(.o,.x) .tiny-cell:hover::before,
+.tiny-cell:hover::after,
+.tiny-cell:is(.o,.x)::before, 
+.tiny-cell:is(.o,.x)::after,
+.mega-cell:is(.o,.x,.d)::after,
+.mega-cell:is(.o,.x,.d)::before
+{
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    translate: -50% -50%;
+}
+
+.mega-cell:is(.o,.x,.d)::after,
+.mega-cell:is(.o,.x,.d)::before{
+    z-index: 3;
+}
+
+/* d */
+
+.mega-cell.d::after,
+.mega-cell.d::before{
+    width: 80%;
+    height: 10px;
+    background-color: var(--d-color);
+}
+
+.mega-cell.d::after{
+    translate: -50% calc(-50% - 10px);
+}
+.mega-cell.d::before{
+    translate: -50% calc(-50% + 10px);
+}
+
+/* o */
+
+#mega-board.o .mega-cell:not(.o,.x,.d).active .tiny-cell:not(.o,.x):hover::before,
+.tiny-cell.o::before,
+.mega-cell.o::before{
+    width: 75%;
+    aspect-ratio: 1/1;
+    background-color: transparent;
+    border-radius: 100%;
+    border: .7rem solid var(--o-color);
+}
+
+
+
+/* x */
+#mega-board.x .mega-cell:not(.o,.x,.d).active .tiny-cell:not(.o,.x):hover::after,
+#mega-board.x .mega-cell:not(.o,.x,.d).active .tiny-cell:not(.o,.x):hover::before,
+.tiny-cell.x::after,
+.tiny-cell.x::before,
+.mega-cell.x::after,
+.mega-cell.x::before{
+    width: 10px;
+    height: 80%;
+    background-color: var(--x-color);
+}
+
+#mega-board.x .mega-cell:not(.o,.x,.d) .tiny-cell:not(.o,.x):hover::after,
+.tiny-cell.x::after,
+.mega-cell.x::after{
+    rotate: 45deg;
+}
+
+
+#mega-board.x .mega-cell:not(.o,.x,.d) .tiny-cell:not(.o,.x):hover::before,
+.tiny-cell.x::before,
+.mega-cell.x::before{
+    rotate: -45deg;
+}
+
+.mega-cell:not(.o,.x,.d) .tiny-cell:not(.o,.x):hover::after,
+.mega-cell:not(.o,.x,.d) .tiny-cell:not(.o,.x):hover::before{
+    filter: brightness(0%) invert(100%);
+}
+
+/*  */
+#message-container{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    translate: -50% 0;
+}
+
+#message{
+    font-size: 3rem;
+    font-weight: 900;
+}
+
+#symbol{
+    position: relative;
+    aspect-ratio: 1/1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#message-container.active{
+    opacity: 1;
+}
+
+#message-container.active #symbol:is(.x,.o){
+    width: calc(var(--cell-size)*.5);
+}
+
+#message-container.active + #reset-button{
+    display: block;
+}
+
+
+#reset-button{
+    position: absolute;
+    bottom: .5rem;
+
+    width: fit-content;
+    padding: .5rem .8rem;
+    background-color: var(--board);
+    border-style: none;
+    color: white;
+    border-radius: 5px;
+    transition: .1s;
+    font-weight: 900;
+    text-transform: uppercase;
+    display: none;
+}
+
+#reset-button:hover{
+    scale: 1.05;
+}
+
+#reset-button:active{
+    scale: 0.95;
+}
+
+#reset-button:focus{
+    outline-style: none;
+}
